@@ -1,0 +1,183 @@
+body{
+    margin: 0;
+    background: #1B1B1B;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#app{
+    margin: 0 auto;
+    max-width: 1000px;
+    display: grid;
+    grid-auto-rows: minmax(150px, auto);
+    padding: 1rem;
+    /* grid-template-columns:  */
+    height:100vh;
+    color: white;
+    grid-gap: 1em;
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
+}
+
+.holder{
+}
+
+.entry{
+    display: flex;
+    flex-flow: row nowrap;
+    background-color: #454547;
+    padding: 1rem;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+}
+
+.card {
+    margin-right: 20px;
+    width: 25%;
+}
+
+.entryHolder{
+    background-color: gray;
+    border-radius: 10px;
+}
+
+.dateStyle{
+    font-size: smaller;
+    color: #1B1B1B;
+    font-weight: bold;
+}
+
+.tempStyle{
+    color: #82D305;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.cityStyle{
+    color: #D61A3C;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.contentStyle{
+    color: #1B1B1B;
+    font-weight: bold;
+}
+
+.headline {
+    justify-self: center;
+    align-self: center;
+    font-size: 3rem;
+    font-weight: bolder;
+}
+
+.title{
+
+}
+
+/*  Basic Styling To Override Default For Basic HTML Elements */
+label{
+    display:block;
+    font-size: 1.7rem;
+    padding: 0.5rem 0;
+}
+
+input{
+    display:block;
+    padding: 1rem;
+    height: 20px;
+    width: calc(100% - 2rem);
+    background: #E27429;/*#22b2da*/
+    color: #1B1B1B;
+    font-size: 1rem;
+    font-family: 'Lato', sans-serif;
+    border: none;
+    border-radius: 4px;
+}
+
+button{
+    width: 200px;
+    height: 50px;
+    background: #454547;
+    color: #E27429;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'Lato', sans-serif;
+    border: none;
+    box-shadow: 0px 5px 15px #444;
+    margin-top: 1.3rem;
+    border-radius: 10px;
+    transition: all 0.3s ease 0s;
+}
+
+h1{
+    font-size: 36px;
+}
+
+textarea{
+    resize: none;
+    width: 70%;
+    display: block;
+    padding: 0.5rem;
+    background:#E27429;
+    color: #1b1b1b;
+    font-size: 1rem;
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+}
+/* Reset style for HTML element on active to have no border*/
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+/* Style for Placeholder Text*/
+::placeholder { /* Firefox, Chrome, Opera */
+    color: #1b1b1b;
+    opacity: 0.5;
+    font-family: 'Lato', sans-serif;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #1b1b1b;
+    opacity: 0.5;
+    font-family: 'Lato', sans-serif;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: #1b1b1b;
+    opacity: 0.5;
+    font-family: 'Lato', sans-serif;
+}
+
+button:hover {
+    color: white;
+    background-color: #3D9E74;
+    box-shadow: 0 10px 20px rgba(0, 165, 106, 0.5);
+    transform: translateY(-5px);
+}
+
+@media only screen and (max-width: 599px) {
+    html {
+        font-size: 12px;
+    }
+
+    #app {
+        height: auto;
+        grid-auto-rows: minmax(100px, auto);
+    }
+
+    textarea {
+        width: calc(100% - 1.17rem);
+    }
+
+    .entry {
+        flex-flow: column nowrap;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+        margin-right: 0;
+        width: 100%;
+    }
+}
