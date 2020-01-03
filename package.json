@@ -12,5 +12,8 @@
   "devDependencies": {
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "babel-loader": "^8.0.6"
   }
 }
