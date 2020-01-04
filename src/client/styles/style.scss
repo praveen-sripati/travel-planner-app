@@ -92,6 +92,11 @@ label{
     text-shadow: 0 0 8px #5ce5d5;
 }
 
+input[type=date] {
+    margin-top: 1rem;
+    background: white;
+}
+
 input{
     display:block;
     padding: 1rem;

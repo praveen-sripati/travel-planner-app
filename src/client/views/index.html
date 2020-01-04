@@ -13,33 +13,12 @@
   <div class ="holder zip">
     <label for="zip">City Name:</label>
     <input type="text" id="zip" placeholder="ex. Bhiwandi">
+    <input type="date" class="form-control" value="02-16-2012">
   </div>
   <div class ="holder feel">
     <label for="feelings">How are you feeling today?</label>
     <textarea class= "myInput" id="feelings" placeholder="Enter your feelings here" rows="9" cols="50"></textarea>
     <button id="generate" type = "submit" onclick="return Client.performAction(event)" onsubmit="return Client.performAction(event)"> Generate </button>
   </div>
-  <div class ="holder entry">
-    <div class="card">
-      <div class = "title">Most Recent Entry</div>
-      <div class = "entryHolder">
-        <div id = "date" class="dateStyle"></div>
-        <div id = "city" class="cityStyle"></div>
-        <div id = "temp" class="tempStyle"></div>
-        <div id = "content" class="contentStyle"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class = "title">Previous Entry</div>
-      <div id="prevEntry" class="entryHolder">
-        <div id = "prevDate" class="dateStyle"></div>
-        <div id = "prevCity" class="cityStyle"></div>
-        <div id = "prevTemp" class="tempStyle"></div>
-        <div id = "prevContent" class="contentStyle"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
