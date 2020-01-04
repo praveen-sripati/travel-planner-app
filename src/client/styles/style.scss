@@ -18,6 +18,15 @@ body{
     font-family: 'Lato', sans-serif;
 }
 
+.headline {
+    color: #fd6bb6;
+    padding: 20px;
+    border: 3px solid #5ce5d5;
+    border-radius: 10px;
+    text-shadow: 0 0 15px #fd6bb6;
+    box-shadow: 0 0 10px #5ce5d5, inset 0 0 10px #5ce5d5;
+}
+
 .holder{
 }
 
@@ -79,6 +88,8 @@ label{
     display:block;
     font-size: 1.7rem;
     padding: 0.5rem 0;
+    color: #5ce5d5;
+    text-shadow: 0 0 8px #5ce5d5;
 }
 
 input{

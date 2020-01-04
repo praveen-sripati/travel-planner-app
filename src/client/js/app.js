@@ -8,10 +8,10 @@ let d = new Date();
 let newDate = months[d.getMonth()]+' '+ d.getDate()+' '+ d.getFullYear();
 
 // Event listener to add function to existing HTML DOM element
-document.getElementById('generate').addEventListener('click', performAction);
+// document.getElementById('generate').addEventListener('click', performAction);
 
 /* Function called by event listener */
-function performAction(e) {
+export function performAction(e) {
   const zipOrCity = document.getElementById('zip').value;
   if (typeof(zipOrCity) === "number") {
     baseUrl = "https://api.openweathermap.org/data/2.5/weather?zip=";
