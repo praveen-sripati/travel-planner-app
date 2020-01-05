@@ -3,22 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Travel App</title>
+<title>Travel Planner</title>
 </head>
  <body>
 <div id = "app">
   <div class ="holder headline">
-    Travel App
+    Travel Planner
   </div>
   <div class ="holder zip">
     <label for="zip">City Name:</label>
     <input type="text" id="zip" placeholder="ex. Bhiwandi">
     <input type="date" class="form-control" value="02-16-2012">
-  </div>
-  <div class ="holder feel">
-    <label for="feelings">How are you feeling today?</label>
-    <textarea class= "myInput" id="feelings" placeholder="Enter your feelings here" rows="9" cols="50"></textarea>
     <button id="generate" type = "submit" onclick="return Client.performAction(event)" onsubmit="return Client.performAction(event)"> Generate </button>
+  </div>
+  <div class="holder trip-details">
+    <div class="place"></div>
+    <div class="departing"></div>
+    <div class="distance"></div>
+    <div class="typical-weather">
+      <p class="high"></p>
+      <p class="low"></p>
+      <p class="weather-detail"></p>
+    </div>
   </div>
 </body>
 </html>
