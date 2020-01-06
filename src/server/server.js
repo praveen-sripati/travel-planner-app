@@ -51,10 +51,9 @@ function addProjectData(req, res) {
 
   projectData = {
     city: req.body.city,
-    temp: req.body.temp,
-    date: req.body.date,
-    condition: req.body.condition,
-    userResponse: req.body.userResponse
+    depart: req.body.depart,
+    longitude: req.body.longitude,
+    latitude: req.body.latitude,
   };
 
   allData.unshift(projectData);
