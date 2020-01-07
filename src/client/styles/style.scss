@@ -30,6 +30,28 @@ body{
 .holder{
 }
 
+.trip-container {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 1rem 10rem;
+    color: black;
+    .trip-details {
+        .place, .departing {
+            font-size: 1.5rem;
+            font-weight: bolder;
+        }
+        .typical-weather {
+            .temp-high,.temp-low,.summary {
+                font-size: 1rem;
+            }
+        }
+    }
+    .box {
+        padding: 0 0.5rem;
+        width: 50%;
+    }
+}
+
 .entry{
     display: flex;
     flex-flow: row nowrap;

@@ -16,14 +16,18 @@
     <input type="date" id="date" class="form-control" value="02-16-2012">
     <button id="generate" type = "submit" onclick="return Client.performAction(event)" onsubmit="return Client.performAction(event)"> Generate </button>
   </div>
-  <div class="holder trip-details">
-    <div class="place"></div>
-    <div class="departing"></div>
-    <!-- <div class="longitude"></div> -->
-    <div class="typical-weather">
-      <p class="longitude"></p>
-      <p class="latitude"></p>
-      <p class="weather-detail"></p>
+  <div class="holder trip-container">
+    <div class="trip-image box"></div>
+    <div class="trip-details box">
+      <div class="place"></div>
+      <div class="departing"></div>
+      <p class="days-count"></p>
+      <div class="typical-weather">
+        <div class="typical-weather-title"></div>
+        <div class="temp-high"></div>
+        <div class="temp-low"></div>
+        <div class="summary"></div>
+      </div>
     </div>
   </div>
 </body>

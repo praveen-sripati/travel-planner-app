@@ -16,24 +16,29 @@ export function performAction(e) {
   const dateValue = new Date(date);
   const currentDate = new Date();
 
-  const daysCount = daysCountdown(dateValue, currentDate);
+  const daysCount = daysCountdown(dateValue, currentDate) + 1;
   const newDate = months[dateValue.getMonth()]+' '+ dateValue.getDate()+' '+ dateValue.getFullYear();
 
   getCoordinates(baseUrl, City, maxRows, USER_NAME)
   .then((data) => {
     const coordinates = "/" + data.geonames[0].lat + "," + data.geonames[0].lng;
     const time = "," + dateValue.toISOString().replace('.000Z','Z');
-    getWeather(darkSkyBaseURL, darkSkyAPI_KEY, coordinates, time);
+    getWeather(darkSkyBaseURL, darkSkyAPI_KEY, coordinates, time)
+    .then((weatherData) => {
+      // console.log(weatherData);
+      postData('/addProjectData', {
+        city: City,
+        depart: newDate,
+        longitude: weatherData.longitude,
+        latitude: weatherData.latitude,
+        daysCount: daysCount,
+        tempHigh: weatherData.daily.data[0].temperatureHigh,
+        tempLow: weatherData.daily.data[0].temperatureLow,
+        summary: weatherData.daily.data[0].summary
+      });
+      updateUI();
+    })
   })
-  // .then((data) => {
-  //   postData('/addProjectData', {
-  //     city: data.geonames[0].toponymName,
-  //     depart: newDate,
-  //     longitude: data.geonames[0].lng,
-  //     latitude: data.geonames[0].lat
-  //   });
-  //   updateUI();
-  // })
 }
 
 /*Days Countdown*/
@@ -55,14 +60,12 @@ const getCoordinates = async (baseUrl, City, maxRows, USER_NAME) => {
     }
   } catch(error) {
     console.log("error",error);
-    // alert("Zipcode or city no found!");
     alert(error.message);
   }
 }
 
 /*Function to Darksky Web API Data */
 const getWeather = async (darkSkyBaseURL, darkSkyAPI_KEY, coordinates,time) => {
-  console.log(darkSkyBaseURL+darkSkyAPI_KEY+coordinates+time);
   const apiURL = darkSkyBaseURL+darkSkyAPI_KEY+coordinates+time;
   const res = await fetch('http://localhost:8000/weather', {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -70,7 +73,6 @@ const getWeather = async (darkSkyBaseURL, darkSkyAPI_KEY, coordinates,time) => {
     credentials: 'same-origin', // include, *same-origin, omit
     headers: {
       'Content-Type': 'application/json',
-      // 'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: JSON.stringify({url: apiURL})
   });
@@ -113,9 +115,9 @@ const updateUI = async () => {
   try {
     const allData = await res.json();
     recentEntry(allData);
-    if(allData.length > 1) {
-      previousEntry(allData);
-    }
+    // if(allData.length > 1) {
+    //   previousEntry(allData);
+    // }
   } catch(error) {
     console.log("error", error);
     alert("Something went wrong!");
@@ -123,17 +125,23 @@ const updateUI = async () => {
 }
 
 function recentEntry(allData) {
-  // document.querySelector('.trip-details').style.cssText = "margin-top:1rem; padding: 1rem;";
-  document.getElementsByClassName('place')[0].innerHTML = allData[0].city;
-  document.getElementsByClassName('departing')[0].innerHTML = allData[0].depart;
-  document.getElementsByClassName('longitude')[0].innerHTML = allData[0].longitude;
-  document.getElementsByClassName('latitude')[0].innerHTML = allData[0].latitude;
+  document.getElementsByClassName('trip-container')[0].style.backgroundColor = "#E27429";
+  document.getElementsByClassName('trip-image')[0].innerHTML = `image of the location`;
+  document.getElementsByClassName('place')[0].innerHTML = `My trip to: ${allData[0].city}`;
+  document.getElementsByClassName('departing')[0].innerHTML = `Departing: ${allData[0].depart}`;
+  document.getElementsByClassName('days-count')[0].innerHTML = `${allData[0].city} is ${allData[0].daysCount} days away`;
+  document.getElementsByClassName('typical-weather-title')[0].innerHTML = `Typical weather for then is:`;
+  document.getElementsByClassName('temp-high')[0].innerHTML = `High: ${allData[0].tempHigh}`;
+  document.getElementsByClassName('temp-low')[0].innerHTML = `Low: ${allData[0].tempLow}`;
+  if(allData[0].summary !== undefined) {
+    document.getElementsByClassName('summary')[0].innerHTML = `Summary: ${allData[0].summary}`;
+  }
 }
 
-function previousEntry(allData) {
-  document.getElementById('prevEntry').style.cssText = "margin-top:1rem; padding: 1rem;";
-  document.getElementById('prevCity').innerHTML = allData[1].city;
-  document.getElementById('prevDate').innerHTML = allData[1].date;
-  document.getElementById('prevTemp').innerHTML = `${allData[1].temp}°C ${allData[1].condition}`;
-  document.getElementById('prevContent').innerHTML =  "\""+allData[1].userResponse+"\"";
-}
+// function previousEntry(allData) {
+//   document.getElementById('prevEntry').style.cssText = "margin-top:1rem; padding: 1rem;";
+//   document.getElementById('prevCity').innerHTML = allData[1].city;
+//   document.getElementById('prevDate').innerHTML = allData[1].date;
+//   document.getElementById('prevTemp').innerHTML = `${allData[1].temp}°C ${allData[1].condition}`;
+//   document.getElementById('prevContent').innerHTML =  "\""+allData[1].userResponse+"\"";
+// }

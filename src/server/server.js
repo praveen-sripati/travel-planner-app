@@ -55,7 +55,6 @@ app.post('/weather', getWeather);
 
 // proxy post request to darkskyAPI
 function getWeather(req, res) {
-  console.log(req.body.url)
   request(
     { url: req.body.url },
     (error, response, body) => {
@@ -77,6 +76,10 @@ function addProjectData(req, res) {
     depart: req.body.depart,
     longitude: req.body.longitude,
     latitude: req.body.latitude,
+    daysCount: req.body.daysCount,
+    tempHigh: req.body.tempHigh,
+    tempLow: req.body.tempLow,
+    summary: req.body.summary
   };
 
   allData.unshift(projectData);
