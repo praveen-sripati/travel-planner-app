@@ -21,19 +21,23 @@ export function performAction(e) {
 
   getCoordinates(baseUrl, City, maxRows, USER_NAME)
   .then((data) => {
+
     const coordinates = "/" + data.geonames[0].lat + "," + data.geonames[0].lng;
     const time = "," + dateValue.toISOString().replace('.000Z','Z');
+    const country = data.geonames[0].countryName;
+
     getWeather(darkSkyBaseURL, darkSkyAPI_KEY, coordinates, time)
     .then((weatherData) => {
       // console.log(weatherData);
       postData('/addProjectData', {
         city: City,
+        country: country,
         depart: newDate,
         longitude: weatherData.longitude,
         latitude: weatherData.latitude,
         daysCount: daysCount,
-        tempHigh: weatherData.daily.data[0].temperatureHigh,
-        tempLow: weatherData.daily.data[0].temperatureLow,
+        tempHigh: Math.round((weatherData.daily.data[0].temperatureHigh-32)*5/9),
+        tempLow: Math.round((weatherData.daily.data[0].temperatureLow-32)*5/9),
         summary: weatherData.daily.data[0].summary
       });
       updateUI();
@@ -127,16 +131,17 @@ const updateUI = async () => {
 function recentEntry(allData) {
   document.getElementsByClassName('trip-container')[0].style.backgroundColor = "#E27429";
   document.getElementsByClassName('trip-image')[0].innerHTML = `image of the location`;
-  document.getElementsByClassName('place')[0].innerHTML = `My trip to: ${allData[0].city}`;
+  document.getElementsByClassName('place')[0].innerHTML = `My trip to: ${allData[0].city}, ${allData[0].country}`;
   document.getElementsByClassName('departing')[0].innerHTML = `Departing: ${allData[0].depart}`;
-  document.getElementsByClassName('days-count')[0].innerHTML = `${allData[0].city} is ${allData[0].daysCount} days away`;
+  document.getElementsByClassName('days-count')[0].innerHTML = `${allData[0].city}, ${allData[0].country} is ${allData[0].daysCount} days away`;
   document.getElementsByClassName('typical-weather-title')[0].innerHTML = `Typical weather for then is:`;
-  document.getElementsByClassName('temp-high')[0].innerHTML = `High: ${allData[0].tempHigh}`;
-  document.getElementsByClassName('temp-low')[0].innerHTML = `Low: ${allData[0].tempLow}`;
+  document.getElementsByClassName('temp-high')[0].innerHTML = `High: ${allData[0].tempHigh} °C`;
+  document.getElementsByClassName('temp-low')[0].innerHTML = `Low: ${allData[0].tempLow} °C`;
   if(allData[0].summary !== undefined) {
     document.getElementsByClassName('summary')[0].innerHTML = `Summary: ${allData[0].summary}`;
   }
 }
+
 
 // function previousEntry(allData) {
 //   document.getElementById('prevEntry').style.cssText = "margin-top:1rem; padding: 1rem;";

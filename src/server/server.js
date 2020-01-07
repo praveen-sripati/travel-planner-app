@@ -73,6 +73,7 @@ function addProjectData(req, res) {
 
   projectData = {
     city: req.body.city,
+    country:req.body.country,
     depart: req.body.depart,
     longitude: req.body.longitude,
     latitude: req.body.latitude,
