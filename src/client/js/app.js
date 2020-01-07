@@ -1,8 +1,11 @@
 // Personal API Key for OpenWeatherMap API
+import {config} from '../../../config';
 
-let baseUrl = "http://api.geonames.org/searchJSON?q=";
-const USER_NAME = "&username=praveen_sripati";
+const baseUrl = "http://api.geonames.org/searchJSON?q=";
+const USER_NAME = "&username="+config.USER_NAME;
 const maxRows = "&maxRows=1";
+const darkSkyBaseURL = "https://api.darksky.net/forecast/";
+const darkSkyAPI_KEY = config.API_KEY;
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -18,14 +21,19 @@ export function performAction(e) {
 
   getCoordinates(baseUrl, City, maxRows, USER_NAME)
   .then((data) => {
-    postData('/addProjectData', {
-      city: data.geonames[0].toponymName,
-      depart: newDate,
-      longitude: data.geonames[0].lng,
-      latitude: data.geonames[0].lat
-    });
-    updateUI();
+    const coordinates = "/" + data.geonames[0].lat + "," + data.geonames[0].lng;
+    const time = "," + dateValue.toISOString().replace('.000Z','Z');
+    getWeather(darkSkyBaseURL, darkSkyAPI_KEY, coordinates, time);
   })
+  // .then((data) => {
+  //   postData('/addProjectData', {
+  //     city: data.geonames[0].toponymName,
+  //     depart: newDate,
+  //     longitude: data.geonames[0].lng,
+  //     latitude: data.geonames[0].lat
+  //   });
+  //   updateUI();
+  // })
 }
 
 /*Days Countdown*/
@@ -34,7 +42,7 @@ function daysCountdown(dateValue, currentDate) {
   const diffInMs = dateValue.getTime() - currentDate.getTime();  return Math.floor(diffInMs/oneDayInMs);
 }
 
-/* Function to GET Web API Data*/
+/* Function to GET Geonames Web API Data*/
 const getCoordinates = async (baseUrl, City, maxRows, USER_NAME) => {
   const res = await fetch(baseUrl+City+maxRows+USER_NAME)
   try {
@@ -48,6 +56,34 @@ const getCoordinates = async (baseUrl, City, maxRows, USER_NAME) => {
   } catch(error) {
     console.log("error",error);
     // alert("Zipcode or city no found!");
+    alert(error.message);
+  }
+}
+
+/*Function to Darksky Web API Data */
+const getWeather = async (darkSkyBaseURL, darkSkyAPI_KEY, coordinates,time) => {
+  console.log(darkSkyBaseURL+darkSkyAPI_KEY+coordinates+time);
+  const apiURL = darkSkyBaseURL+darkSkyAPI_KEY+coordinates+time;
+  const res = await fetch('http://localhost:8000/weather', {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'same-origin', // no-cors, *cors, same-origin
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify({url: apiURL})
+  });
+  try {
+    const data = await res.json();
+    console.log(data);
+    if (res.ok) {
+      return data;
+    } else {
+      throw new Error(data.message);
+    }
+  } catch(error) {
+    console.log("error",error);
     alert(error.message);
   }
 }

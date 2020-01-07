@@ -3,6 +3,7 @@ let projectData = {};
 
 // Require Express to run server and routes
 const express = require('express');
+const request = require('request')
 
 // Start up an instance of app
 const app = express();
@@ -12,6 +13,12 @@ const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// Access-Control-Allow-Origin
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 // Cors for cross origin allowance
 const cors = require('Cors');
@@ -42,6 +49,22 @@ app.get('/all', getProjectData);
 function getProjectData(req, res) {
   console.log(allData);
   res.send(allData);
+}
+
+app.post('/weather', getWeather);
+
+// proxy post request to darkskyAPI
+function getWeather(req, res) {
+  console.log(req.body.url)
+  request(
+    { url: req.body.url },
+    (error, response, body) => {
+      if (error || response.statusCode !== 200) {
+        return res.status(500).json({ type: 'error', message: error.message });
+      }
+      res.json(JSON.parse(body));
+    }
+  )
 }
 
 //Post route
