@@ -80,7 +80,8 @@ function addProjectData(req, res) {
     daysCount: req.body.daysCount,
     tempHigh: req.body.tempHigh,
     tempLow: req.body.tempLow,
-    summary: req.body.summary
+    summary: req.body.summary,
+    imageURL: req.body.imageURL
   };
 
   allData.unshift(projectData);

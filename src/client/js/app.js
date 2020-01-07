@@ -5,7 +5,9 @@ const baseUrl = "http://api.geonames.org/searchJSON?q=";
 const USER_NAME = "&username="+config.USER_NAME;
 const maxRows = "&maxRows=1";
 const darkSkyBaseURL = "https://api.darksky.net/forecast/";
-const darkSkyAPI_KEY = config.API_KEY;
+const darkSkyAPI_KEY = config.darkskyAPI_KEY;
+const pixabayBaseURL = "https://pixabay.com/api/?key=";
+const pixabayAPI_KEY = config.pixabayAPI_KEY;
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -28,19 +30,24 @@ export function performAction(e) {
 
     getWeather(darkSkyBaseURL, darkSkyAPI_KEY, coordinates, time)
     .then((weatherData) => {
-      // console.log(weatherData);
-      postData('/addProjectData', {
-        city: City,
-        country: country,
-        depart: newDate,
-        longitude: weatherData.longitude,
-        latitude: weatherData.latitude,
-        daysCount: daysCount,
-        tempHigh: Math.round((weatherData.daily.data[0].temperatureHigh-32)*5/9),
-        tempLow: Math.round((weatherData.daily.data[0].temperatureLow-32)*5/9),
-        summary: weatherData.daily.data[0].summary
-      });
-      updateUI();
+
+      const query = `&q=${City}&category=travel&orientation=horizontal`
+      getImage(pixabayBaseURL, pixabayAPI_KEY, query)
+      .then((imageData)=>{
+        postData('/addProjectData', {
+          city: City,
+          country: country,
+          depart: newDate,
+          longitude: weatherData.longitude,
+          latitude: weatherData.latitude,
+          daysCount: daysCount,
+          tempHigh: Math.round((weatherData.daily.data[0].temperatureHigh-32)*5/9),
+          tempLow: Math.round((weatherData.daily.data[0].temperatureLow-32)*5/9),
+          summary: weatherData.daily.data[0].summary,
+          imageURL: imageData.hits[0].webformatURL.replace('_640','_240')
+        });
+        updateUI();
+      })
     })
   })
 }
@@ -94,6 +101,22 @@ const getWeather = async (darkSkyBaseURL, darkSkyAPI_KEY, coordinates,time) => {
   }
 }
 
+const getImage = async (pixabayBaseURL, pixabayAPI_KEY, query) => {
+  const res = await fetch(pixabayBaseURL+pixabayAPI_KEY+query)
+  try {
+    const data = await res.json();
+    console.log(data);
+    if (res.ok) {
+      return data;
+    } else {
+      throw new Error(data.message);
+    }
+  } catch(error) {
+    console.log("error",error);
+    alert(error.message);
+  }
+}
+
 /* Function to POST data */
 const postData = async (url='', data={}) => {
   const res = await fetch(url, {
@@ -129,17 +152,38 @@ const updateUI = async () => {
 }
 
 function recentEntry(allData) {
+
   document.getElementsByClassName('trip-container')[0].style.backgroundColor = "#E27429";
-  document.getElementsByClassName('trip-image')[0].innerHTML = `image of the location`;
+
   document.getElementsByClassName('place')[0].innerHTML = `My trip to: ${allData[0].city}, ${allData[0].country}`;
+
   document.getElementsByClassName('departing')[0].innerHTML = `Departing: ${allData[0].depart}`;
-  document.getElementsByClassName('days-count')[0].innerHTML = `${allData[0].city}, ${allData[0].country} is ${allData[0].daysCount} days away`;
-  document.getElementsByClassName('typical-weather-title')[0].innerHTML = `Typical weather for then is:`;
-  document.getElementsByClassName('temp-high')[0].innerHTML = `High: ${allData[0].tempHigh} °C`;
-  document.getElementsByClassName('temp-low')[0].innerHTML = `Low: ${allData[0].tempLow} °C`;
-  if(allData[0].summary !== undefined) {
-    document.getElementsByClassName('summary')[0].innerHTML = `Summary: ${allData[0].summary}`;
+
+  if (allData[0].daysCount >= 0) {
+    document.getElementsByClassName('days-count')[0].innerHTML = `${allData[0].city}, ${allData[0].country} is ${allData[0].daysCount} days away`;
+  } else {
+    document.getElementsByClassName('days-count')[0].innerHTML = '';
   }
+
+  document.getElementsByClassName('typical-weather-title')[0].innerHTML = `Typical weather for then is:`;
+
+  document.getElementsByClassName('temp-high')[0].innerHTML = `High: ${allData[0].tempHigh} °C`;
+
+  document.getElementsByClassName('temp-low')[0].innerHTML = `Low: ${allData[0].tempLow} °C`;
+
+  if(allData[0].summary !== undefined) {
+    document.getElementsByClassName('summary')[0].innerHTML = allData[0].summary;
+  }
+
+  if(allData[0].imageURL !== undefined) {
+    const image = document.getElementById('image-location')
+    image.setAttribute('src',allData[0].imageURL)
+    image.setAttribute('width','100%');
+    image.setAttribute('min-width','240px');
+  } else {
+    document.getElementsByClassName('trip-image')[0].innerHTML = `image of the location`;
+  }
+
 }
 
 
