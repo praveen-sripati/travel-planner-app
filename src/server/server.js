@@ -81,7 +81,8 @@ function addProjectData(req, res) {
     tempHigh: req.body.tempHigh,
     tempLow: req.body.tempLow,
     summary: req.body.summary,
-    imageURL: req.body.imageURL
+    imageURL: req.body.imageURL,
+    icon: req.body.icon
   };
 
   allData.unshift(projectData);

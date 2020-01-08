@@ -1,5 +1,18 @@
 // Personal API Key for OpenWeatherMap API
 import {config} from '../../../config';
+import clearDay from '../media/weather-icons/clear-day.svg';
+import clearNight from '../media/weather-icons/clear-night.svg';
+import cloudy from '../media/weather-icons/clear-day.svg';
+import fog from '../media/weather-icons/fog.svg'
+import hail from '../media/weather-icons/hail.svg';
+import partlyCloudyDay from '../media/weather-icons/partly-cloudy-day.svg';
+import partlyCloudyNight from '../media/weather-icons/partly-cloudy-night.svg';
+import rain from '../media/weather-icons/rain.svg';
+import sleet from '../media/weather-icons/sleet.svg';
+import snow from '../media/weather-icons/snow.svg'
+import thunderstorm from '../media/weather-icons/thunderstorm.svg';
+import tornado from '../media/weather-icons/tornado.svg';
+import wind from '../media/weather-icons/wind.svg';
 
 const baseUrl = "http://api.geonames.org/searchJSON?q=";
 const USER_NAME = "&username="+config.USER_NAME;
@@ -35,12 +48,12 @@ export function performAction(e) {
     let imageURL = '';
 
     if (data[1].hits.length !== 0) {
-      imageURL = data[1].hits[0].webformatURL;
+      imageURL = data[1].hits[0].webformatURL.replace('_640','_240');
     } else {
       const countryQuery = `&q=${country}&category=travel&orientation=horizontal&order=popular&page=1&per_page=3`
       getImage(pixabayBaseURL, pixabayAPI_KEY, countryQuery)
       .then((imageData)=>{
-        imageURL = imageData.hits[0].webformatURL;
+        imageURL = imageData.hits[0].webformatURL.replace('_640','_240');
         console.log(imageURL);
       })
     }
@@ -57,8 +70,8 @@ export function performAction(e) {
         tempHigh: Math.round((weatherData.daily.data[0].temperatureHigh-32)*5/9),
         tempLow: Math.round((weatherData.daily.data[0].temperatureLow-32)*5/9),
         summary: weatherData.daily.data[0].summary,
-        imageURL: imageURL
-        // data[1].hits[0].webformatURL.replace('_640','_240')
+        imageURL: imageURL,
+        icon: weatherData.daily.data[0].icon
       });
       updateUI();
     })
@@ -164,6 +177,13 @@ const updateUI = async () => {
   }
 }
 
+function importAll(r) {
+  return r.keys().map(r);
+}
+
+const images = importAll(require.context('./', false, /\.(png|jpe?g|svg)$/));
+
+
 function recentEntry(allData) {
 
   document.getElementsByClassName('trip-container')[0].style.backgroundColor = "#E27429";
@@ -192,8 +212,70 @@ function recentEntry(allData) {
     const image = document.getElementById('image-location')
     image.setAttribute('src',allData[0].imageURL)
     image.setAttribute('width','100%');
+    image.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
   } else {
     document.getElementsByClassName('trip-image')[0].innerHTML = `image of the location`;
+  }
+
+  const icon = document.getElementById('weather-icon');
+  switch(allData[0].icon) {
+    case 'clear-day':
+      icon.setAttribute('src', clearDay);
+      icon.setAttribute('title','Clear Day');
+      break;
+    case 'clear-night':
+      icon.setAttribute('src', clearNight)
+      icon.setAttribute('title','Clear Night');
+      break;
+    case 'rain':
+      icon.setAttribute('src', rain);
+      icon.setAttribute('title','Rain');
+      break;
+    case 'cloudy':
+      icon.setAttribute('src', cloudy);
+      icon.setAttribute('title','Cloudy');
+      break;
+    case 'fog':
+      icon.setAttribute('src', fog);
+      icon.setAttribute('title','Fog');
+      break;
+    case 'hail':
+      icon.setAttribute('src', hail);
+      icon.setAttribute('title','Hail');
+      break;
+    case 'partly-cloudy-day':
+      icon.setAttribute('src', partlyCloudyDay);
+      icon.setAttribute('title','Partly Cloudy Day');
+      break;
+    case 'partly-cloudy-night':
+      icon.setAttribute('src', partlyCloudyNight);
+      icon.setAttribute('title','Partly Cloudy Night');
+      break;
+    case 'sleet':
+      icon.setAttribute('src', sleet);
+      icon.setAttribute('title','Sleet');
+      break;
+    case 'snow':
+      icon.setAttribute('src', snow);
+      icon.setAttribute('title','Snow');
+      break;
+    case 'thunderstorm':
+      icon.setAttribute('src', thunderstorm);
+      icon.setAttribute('title','Thunderstorm');
+      break;
+    case 'tornado':
+      icon.setAttribute('src', tornado);
+      icon.setAttribute('title','Tornado');
+      break;
+    case 'wind':
+      icon.setAttribute('src', wind);
+      icon.setAttribute('title','Wind');
+      break;
+    default:
+      if(icon.hasAttribute('src') && icon.hasAttribute('title')) {
+        icon.removeAttribute('src');
+        icon.removeAttribute('title');
+      }
   }
 
 }

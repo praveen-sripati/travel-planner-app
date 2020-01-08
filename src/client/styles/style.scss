@@ -48,15 +48,27 @@ body{
             .typical-weather-title {
                 font-size: 1.5rem;
             }
-            .temp-high,.temp-low,.summary {
-                font-size: 1.15rem;
-                font-style: italic;
+            .temp-details{
+                display: flex;
+                flex-flow: row wrap;
+                .w-icon {
+                    padding: 0 0.5rem;
+                }
             }
         }
     }
     .box {
         width: 50%;
     }
+}
+
+#weather-icon {
+    width: 28%;
+}
+
+.temp-high,.temp-low,.summary {
+    font-size: 1.15rem;
+    font-style: italic;
 }
 
 .entry{
