@@ -1,6 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default
 
 module.exports = {
   entry :  ['@babel/polyfill', './src/client/index.js'],
@@ -11,6 +15,9 @@ module.exports = {
   mode: 'production',
   devtool: 'source-map',
   stats: 'verbose',
+  optimization: {
+    minimizer: [new TerserPlugin({parallel: true}), new OptimizeCSSAssetsPlugin({})]
+  },
   module: {
     rules: [
       {
@@ -34,6 +41,8 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: "./src/client/views/index.html",
       filename: "./index.html",
-    })
+    }),
+    new MiniCssExtractPlugin({filename: '[name].css'}),
+    new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
   ]
 }

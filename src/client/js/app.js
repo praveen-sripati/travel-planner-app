@@ -35,7 +35,6 @@ export function performAction(e) {
   const daysCount = daysCountdown(dateValue, currentDate) + 1;
   const newDate = months[dateValue.getMonth()]+' '+ dateValue.getDate()+' '+ dateValue.getFullYear();
 
-
   Promise.all([
     getCoordinates(baseUrl, City, maxRows, USER_NAME),
     getImage(pixabayBaseURL, pixabayAPI_KEY, query)
@@ -164,10 +163,10 @@ const postData = async (url='', data={}) => {
 
 /* Function to GET Project Data */
 const updateUI = async () => {
-  const res = await fetch('/all');
+  const res = await fetch('/getProjectData');
   try {
-    const allData = await res.json();
-    recentEntry(allData);
+    const projectData = await res.json();
+    recentEntry(projectData);
     // if(allData.length > 1) {
     //   previousEntry(allData);
     // }
@@ -177,40 +176,35 @@ const updateUI = async () => {
   }
 }
 
-function importAll(r) {
-  return r.keys().map(r);
-}
+function recentEntry(projectData) {
 
-const images = importAll(require.context('./', false, /\.(png|jpe?g|svg)$/));
-
-
-function recentEntry(allData) {
+  console.log(projectData);
 
   document.getElementsByClassName('trip-container')[0].style.backgroundColor = "#E27429";
 
-  document.getElementsByClassName('place')[0].innerHTML = `My trip to: ${allData[0].city}, ${allData[0].country}`;
+  document.getElementsByClassName('place')[0].innerHTML = `My trip to: ${projectData.city}, ${projectData.country}`;
 
-  document.getElementsByClassName('departing')[0].innerHTML = `Departing: ${allData[0].depart}`;
+  document.getElementsByClassName('departing')[0].innerHTML = `Departing: ${projectData.depart}`;
 
-  if (allData[0].daysCount > 0) {
-    document.getElementsByClassName('days-count')[0].innerHTML = `${allData[0].city}, ${allData[0].country} is ${allData[0].daysCount} day(s) away`;
+  if (projectData.daysCount > 0) {
+    document.getElementsByClassName('days-count')[0].innerHTML = `${projectData.city}, ${projectData.country} is ${projectData.daysCount} day(s) away`;
   } else {
     document.getElementsByClassName('days-count')[0].innerHTML = '';
   }
 
   document.getElementsByClassName('typical-weather-title')[0].innerHTML = `Typical weather for then is:`;
 
-  document.getElementsByClassName('temp-high')[0].innerHTML = `High: ${allData[0].tempHigh} °C`;
+  document.getElementsByClassName('temp-high')[0].innerHTML = `High: ${projectData.tempHigh} °C`;
 
-  document.getElementsByClassName('temp-low')[0].innerHTML = `Low: ${allData[0].tempLow} °C`;
+  document.getElementsByClassName('temp-low')[0].innerHTML = `Low: ${projectData.tempLow} °C`;
 
-  if(allData[0].summary !== undefined) {
-    document.getElementsByClassName('summary')[0].innerHTML = allData[0].summary;
+  if(projectData.summary !== undefined) {
+    document.getElementsByClassName('summary')[0].innerHTML = projectData.summary;
   }
 
-  if(allData[0].imageURL !== undefined) {
+  if(projectData.imageURL !== undefined) {
     const image = document.getElementById('image-location')
-    image.setAttribute('src',allData[0].imageURL)
+    image.setAttribute('src',projectData.imageURL)
     image.setAttribute('width','100%');
     image.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
   } else {
@@ -218,7 +212,7 @@ function recentEntry(allData) {
   }
 
   const icon = document.getElementById('weather-icon');
-  switch(allData[0].icon) {
+  switch(projectData.icon) {
     case 'clear-day':
       icon.setAttribute('src', clearDay);
       icon.setAttribute('title','Clear Day');

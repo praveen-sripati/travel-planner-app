@@ -38,17 +38,15 @@ function listening() {
 }
 
 //Get route
-const allData = []
-
 app.get('/', function (req, res) {
   res.sendFile('dist/index.html')
 })
 
-app.get('/all', getProjectData);
+app.get('/getProjectData', getProjectData);
 
 function getProjectData(req, res) {
-  console.log(allData);
-  res.send(allData);
+  console.log(projectData);
+  res.send(projectData);
 }
 
 app.post('/weather', getWeather);
@@ -83,8 +81,15 @@ function addProjectData(req, res) {
     summary: req.body.summary,
     imageURL: req.body.imageURL,
     icon: req.body.icon
-  };
+  }
 
+}
+
+//POST Route
+const allData = []
+
+app.post('/saveData', saveData);
+
+function saveData(req, res) {
   allData.unshift(projectData);
-  // console.log(projectData);
 }
