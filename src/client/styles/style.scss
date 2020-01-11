@@ -218,6 +218,7 @@ button:hover {
     transform: translateY(-5px);
 }
 
+/* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 599px) {
     html {
         font-size: 12px;
@@ -240,5 +241,32 @@ button:hover {
         margin-bottom: 1rem;
         margin-right: 0;
         width: 100%;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 768px and low) */
+@media only screen and (max-width: 768px) {
+
+    #app {
+        grid-auto-rows: unset;
+    }
+
+    .trip-container {
+        margin: 0 auto;
+        display: flex;
+        flex-flow: column wrap;
+
+        .box {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .trip-image {
+            padding: 0;
+        }
+    }
+
+    .trip-details {
+        padding-top: 1rem;
     }
 }
