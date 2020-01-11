@@ -288,59 +288,60 @@ function recentEntry(projectData) {
   }
 
   //Displays weather icons (SVG's) if matches with Darksky API icon property
+  //
   const icon = document.getElementById('weather-icon');
+
+  /**
+   * @description sets src and title attributes to icon element
+   * @param {*} src
+   * @param {*} title
+   * @returns none
+   */
+  function setAttributes(src, title) {
+    icon.setAttribute('src', src);
+    icon.setAttribute('title', title);
+  }
+
+
   switch(projectData.icon) {
     case 'clear-day':
-      icon.setAttribute('src', clearDay);
-      icon.setAttribute('title','Clear Day');
+      setAttributes(clearDay,'Clear Day');
       break;
     case 'clear-night':
-      icon.setAttribute('src', clearNight)
-      icon.setAttribute('title','Clear Night');
+      setAttributes(clearNight,'Clear Night');
       break;
     case 'rain':
-      icon.setAttribute('src', rain);
-      icon.setAttribute('title','Rain');
+      setAttributes(rain, 'Rain')
       break;
     case 'cloudy':
-      icon.setAttribute('src', cloudy);
-      icon.setAttribute('title','Cloudy');
+      setAttributes(cloudy,'Cloudy');
       break;
     case 'fog':
-      icon.setAttribute('src', fog);
-      icon.setAttribute('title','Fog');
+      setAttributes(fog,'Fog');
       break;
     case 'hail':
-      icon.setAttribute('src', hail);
-      icon.setAttribute('title','Hail');
+      setAttributes(hail,'Hail');
       break;
     case 'partly-cloudy-day':
-      icon.setAttribute('src', partlyCloudyDay);
-      icon.setAttribute('title','Partly Cloudy Day');
+      setAttributes(partlyCloudyDay,'Partly Cloudy Day');
       break;
     case 'partly-cloudy-night':
-      icon.setAttribute('src', partlyCloudyNight);
-      icon.setAttribute('title','Partly Cloudy Night');
+      setAttributes(partlyCloudyNight,'Partly Cloudy Night');
       break;
     case 'sleet':
-      icon.setAttribute('src', sleet);
-      icon.setAttribute('title','Sleet');
+      setAttributes(sleet,'Sleet');
       break;
     case 'snow':
-      icon.setAttribute('src', snow);
-      icon.setAttribute('title','Snow');
+      setAttributes(snow,'Snow');
       break;
     case 'thunderstorm':
-      icon.setAttribute('src', thunderstorm);
-      icon.setAttribute('title','Thunderstorm');
+      setAttributes(thunderstorm,'Thunderstorm');
       break;
     case 'tornado':
-      icon.setAttribute('src', tornado);
-      icon.setAttribute('title','Tornado');
+      setAttributes(tornado,'Tornado');
       break;
     case 'wind':
-      icon.setAttribute('src', wind);
-      icon.setAttribute('title','Wind');
+      setAttributes(wind,'Wind');
       break;
     default:
       if(icon.hasAttribute('src') && icon.hasAttribute('title')) {
