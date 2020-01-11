@@ -39,17 +39,31 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
  * @return none
  */
 export function performAction(e) {
-  const City = document.getElementById('city').value;
+
+  //gets user input values
+  const userCity = document.getElementById('city').value;
   const date = document.getElementById('date').value;
+
+  //checks whether fields are filled or not
+  if (userCity === '' || date === '') {
+    alert("Please fill out all the fields");
+    return;
+  }
+
+  //converts user input date value into Date data type
   const dateValue = new Date(date);
-  const currentDate = new Date();
-  const query = `&q=${City}&category=travel&orientation=horizontal&order=popular&page=1&per_page=3`
+  const currentDate = new Date(); //defines current date
 
+  //Pixabay query part of the API Endpoint
+  const query = `&q=${userCity}&category=travel&orientation=horizontal&order=popular&page=1&per_page=3`
+
+  //function call to find out days away to travel
   const daysCount = daysCountdown(dateValue, currentDate) + 1;
-  const newDate = months[dateValue.getMonth()]+' '+ dateValue.getDate()+' '+ dateValue.getFullYear();
+  const newDate = months[dateValue.getMonth()]+' '+ dateValue.getDate()+' '+ dateValue.getFullYear();// formats date into (MMM DD YYYY) format e.g Jun 12 2020
 
+  //Performs promises in parallel
   Promise.all([
-    getCoordinates(baseUrl, City, maxRows, USER_NAME),
+    getCoordinates(baseUrl, userCity, maxRows, USER_NAME),
     getImage(pixabayBaseURL, pixabayAPI_KEY, query)
   ])
   .then((data) => {
@@ -59,6 +73,10 @@ export function performAction(e) {
     const country = data[0].geonames[0].countryName;
     let imageURL = '';
 
+    /* if the image of the city is present than it stores the city url
+    * otherwise it will search the country image of the city and stores
+    * it into url
+    */
     if (data[1].hits.length !== 0) {
       imageURL = data[1].hits[0].webformatURL.replace('_640','_240');
     } else {
@@ -70,8 +88,10 @@ export function performAction(e) {
       })
     }
 
+    // fetch the weather details using DarkSky API
     getWeather(darkSkyBaseURL, darkSkyAPI_KEY, coordinates, time)
     .then((weatherData) => {
+      // the response data get posted to the local server
       postData('/addProjectData', {
         city: city,
         country: country,
@@ -85,6 +105,8 @@ export function performAction(e) {
         imageURL: imageURL,
         icon: weatherData.daily.data[0].icon
       });
+
+      //function call to update the UI
       updateUI();
     })
   })
@@ -105,24 +127,24 @@ function daysCountdown(dateValue, currentDate) {
 /**
  * @description Function to GET Geonames Web API Data
  * @param {*} baseUrl
- * @param {*} City
+ * @param {*} userCity
  * @param {*} maxRows
  * @param {*} USER_NAME
  * @returns json response
  */
-const getCoordinates = async (baseUrl, City, maxRows, USER_NAME) => {
-  const res = await fetch(baseUrl+City+maxRows+USER_NAME)
+const getCoordinates = async (baseUrl, userCity, maxRows, USER_NAME) => {
+  const res = await fetch(baseUrl+userCity+maxRows+USER_NAME)
   try {
     const data = await res.json();
     console.log(data);
-    if (res.ok) {
+    if (res.ok && data.geonames.length > 0) {
       return data;
     } else {
-      throw new Error(data.message);
+      throw new Error("Please enter a Valid city name");
     }
   } catch(error) {
     console.log("error",error);
-    alert(error.message);
+    alert(error);
   }
 }
 
@@ -203,9 +225,11 @@ const postData = async (url='', data={}) => {
 
 /* Function to GET weather Data */
 const updateUI = async () => {
+  //fetches weather data from local server
   const res = await fetch('/getProjectData');
   try {
     const projectData = await res.json();
+    //function call to update UI
     recentEntry(projectData);
   } catch(error) {
     console.log("error", error);
