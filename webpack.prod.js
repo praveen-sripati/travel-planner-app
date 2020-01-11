@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   entry :  ['@babel/polyfill', './src/client/index.js'],
@@ -43,6 +44,7 @@ module.exports = {
       filename: "./index.html",
     }),
     new MiniCssExtractPlugin({filename: '[name].css'}),
-    new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
+    new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
+    new WorkboxPlugin.GenerateSW()
   ]
 }

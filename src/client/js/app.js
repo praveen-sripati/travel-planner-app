@@ -302,7 +302,6 @@ function recentEntry(projectData) {
     icon.setAttribute('title', title);
   }
 
-
   switch(projectData.icon) {
     case 'clear-day':
       setAttributes(clearDay,'Clear Day');
