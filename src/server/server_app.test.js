@@ -1,5 +1,6 @@
 const request = require('supertest');
-const app = require('../../server/server_app');
+const app = require('./server_app');
+const polyfill = require('babel-jest');
 
 describe('Test the root path', () => {
   test('It should response the GET method', () => {
