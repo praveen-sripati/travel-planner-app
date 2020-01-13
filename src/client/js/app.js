@@ -280,7 +280,7 @@ function recentEntry(projectData) {
   //Displays image of the location to travel
   if(projectData.imageURL !== undefined) {
     const image = document.getElementById('image-location')
-    image.setAttribute('src',projectData.imageURL)
+    image.setAttribute('src',projectData.imageURL);
     image.setAttribute('width','100%');
     image.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
   } else { //Displays below text if imageURL is not provided by the Pixabay API
