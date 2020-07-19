@@ -1,6 +1,6 @@
 # Travel Planner
 
-Travel Planner is a travel planning application that gives weather details of the location that the user is traveling at a particular date.
+Travel Planner is a travel planning application that gives weather details of the location that the user is traveling on a particular date.
 
 ## Tech
 
